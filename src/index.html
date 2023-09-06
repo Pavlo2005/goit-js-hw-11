@@ -3,22 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homework 10</title>
+    <title>Homework 11</title>
     
     <link rel="stylesheet" href="stile.css" />
   </head>
   <body>
-    <div class="breed-selec-container">
-      <select id="selectElement" class=".breed-select-hidden js-select" hidden>
-        <option data-placeholder="true"></option>
-      </select>
-    </div>
-    <div class="loader-container">
-      <p class="js-loader loader"></p>
-    </div>
-    <p class="js-error error-hidden" hidden>Oops! Something went wrong! Try reloading the page!</p>
-    <div class="cat-info js-cat-info">
-    </div>
+    <form class="search-form js-form" id="search-form">
+      <input
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Search images..."
+      />
+      <button type="submit">Search</button>
+    </form>
 
     <script src="index.js" type="module"></script>
   </body>
