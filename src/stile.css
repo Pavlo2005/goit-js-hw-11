@@ -4,6 +4,10 @@ main {
     margin: 0 auto;
 }
 
+li {
+    list-style-type: none;
+}
+
 .search-form {
     margin-bottom: 32px;
 }
@@ -25,7 +29,14 @@ main {
     justify-content: space-around;
 }
 
+.gallery__link {
+    text-decoration: none;
+    color: #000;
+}
+
 .info-item {
+    text-decoration: none;
+
     align-items: center;
     text-align: center;
 }

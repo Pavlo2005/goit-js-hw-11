@@ -1,4 +1,6 @@
 import axios from "axios";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 axios.defaults.headers.common["x-api-key"] = "live_sD0BZJV6dCuhWiJggYljYuKDqdstJKqoRhboF4tDcrKwkPUiateuE1o0gLHL6XWl";
 
@@ -31,16 +33,21 @@ async function handlerSubmit(evt) {
     }, options);
 
     observer.observe(element.guard);
-
-
 }
 
 async function intersectPictures() {
-    const data = await servicesSearch(currentRequest);
 
-    const page = await createPictures(data, currentRequest);
+    try {
+        const data = await servicesSearch(currentRequest);
 
-    element.gallery.insertAdjacentHTML('beforeend', page);
+        const page = await createPictures(data, currentRequest);
+
+        element.gallery.insertAdjacentHTML('beforeend', page);
+
+        new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 250, });
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 
@@ -69,26 +76,28 @@ async function servicesSearch(value) {
 
 function createPictures(data, currentValue) {
     return data.hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-        return `<div class="photo-card">
-      <img src="${webformatURL}" alt="${currentValue}" width="250" height="250" loading="lazy" />
-      <div class="info">
-        <div class="info-item">
-          <p>likes</p>
-          <p>${likes}</p>
+        return `<li class="gallery__item photo-card">
+      <a class="gallery__link" href="${largeImageURL}">
+        <img src="${webformatURL}" alt="${currentValue}" width="250" height="250" loading="lazy" />
+        <div class="info">
+          <div class="info-item">
+            <p>likes</p>
+            <p>${likes}</p>
+          </div>
+          <div class="info-item">
+            <p>views</p>
+            <p>${views}</p>
+          </div>
+          <div class="info-item">
+            <p>comments</p>
+            <p>${comments}</p>
+          </div>
+          <div class="info-item">
+            <p>downloads</p>
+            <p>${downloads}</p>
+          </div>
         </div>
-        <div class="info-item">
-          <p>views</p>
-          <p>${views}</p>
-        </div>
-        <div class="info-item">
-          <p>comments</p>
-          <p>${comments}</p>
-        </div>
-        <div class="info-item">
-          <p>downloads</p>
-          <p>${downloads}</p>
-        </div>
-      </div>
-    </div>`;
+    </a>
+    </li>`;
     }).join("");
 }
