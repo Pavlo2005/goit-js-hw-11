@@ -78,7 +78,7 @@ function createPictures(data, currentValue) {
     return data.hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
         return `<li class="gallery__item photo-card">
       <a class="gallery__link" href="${largeImageURL}">
-        <img src="${webformatURL}" alt="${currentValue}" width="250" height="250" loading="lazy" />
+        <img src="${webformatURL}" alt="${tags}" width="250" height="250" loading="lazy" />
         <div class="info">
           <div class="info-item">
             <p>likes</p>
