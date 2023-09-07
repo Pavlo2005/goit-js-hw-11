@@ -11,26 +11,36 @@ const element = {
 }
 
 let currentPage = 1;
-let currentRequest;
+let currentRequest = null;
+
+
+const options = {
+    rootMargin: "300px",
+}
+
+const observer = new IntersectionObserver(payload => {
+    if (payload[0].isIntersecting) {
+        if (currentRequest)
+            intersectPictures();
+    }
+}, options);
+
+let gallerySimpleLightbox = new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 250, });
+
 
 element.form.addEventListener('submit', handlerSubmit);
 
 async function handlerSubmit(evt) {
     evt.preventDefault();
 
+    if (!evt.currentTarget.elements.searchQuery.value) {
+        window.alert("you must write a request");
+        return;
+    }
+
     currentPage = 1;
     currentRequest = evt.currentTarget.elements.searchQuery.value;
     element.gallery.innerHTML = "";
-
-    const options = {
-        rootMargin: "300px",
-    }
-
-    const observer = new IntersectionObserver(payload => {
-        if (payload[0].isIntersecting) {
-            intersectPictures();
-        }
-    }, options);
 
     observer.observe(element.guard);
 }
@@ -40,11 +50,20 @@ async function intersectPictures() {
     try {
         const data = await servicesSearch(currentRequest);
 
+        if (data.total < (currentPage - 1) * 40) {
+            window.alert("you have reached the last page");
+            return;
+        }
+
+        console.log(currentPage);
+        console.log(data);
+        currentPage += 1;
+
         const page = await createPictures(data, currentRequest);
 
         element.gallery.insertAdjacentHTML('beforeend', page);
 
-        new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 250, });
+        gallerySimpleLightbox.refresh();
     } catch (err) {
         console.log(err);
     }
@@ -60,7 +79,8 @@ async function servicesSearch(value) {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
-        page: currentPage
+        page: currentPage,
+        per_page: 40
     })
 
     const resp = await fetch(`${BASE_URL}?${params}`);
@@ -68,8 +88,6 @@ async function servicesSearch(value) {
     if (!resp.ok) {
         throw new Error(resp.statusText);
     }
-
-    currentPage += 1;
 
     return resp.json();
 }
