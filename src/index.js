@@ -50,9 +50,9 @@ async function intersectPictures() {
     try {
         const data = await servicesSearch(currentRequest);
 
-        if (data.total < (currentPage - 1) * 40) {
+        if (data.total < (currentPage) * 40) {
             window.alert("you have reached the last page");
-            return;
+            observer.unobserve(element.guard);
         }
 
         console.log(currentPage);
